@@ -140,3 +140,9 @@ body {
   grid-column: 2 / 3;
   background-color: rgb(255, 228, 251);
 }
+
+li {
+  background-color: white;
+  border: 1px dotted black;
+  margin: 5px;
+}
