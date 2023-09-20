@@ -89,6 +89,4 @@ export default function displayTodoList(todoList) {
 
     domList.insertBefore(domItem, addItemBtn); // put the item before the add button
   });
-
-  return { addItemBtn, domList };
 }

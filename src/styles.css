@@ -120,7 +120,8 @@ body {
 }
 
 .sideItem,
-.project {
+.project,
+#addProjectBtn {
   transition: transform 0.2s;
   transform-origin: left;
 }
@@ -130,7 +131,8 @@ body {
 }
 
 .sideItem:hover,
-.project:hover {
+.project:hover,
+#addProjectBtn:hover {
   transform: scale(1.2);
   color: rgb(247, 159, 159);
 }
