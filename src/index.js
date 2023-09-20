@@ -1,21 +1,7 @@
 import "./styles.css";
 import displayTodoList from "./display";
+import { createList, createItem, assignItemToList } from "./engine";
 // import { formatDistance, subDays } from "date-fns";
-
-// create todo list
-function createList(title) {
-  return { title, items: [] };
-}
-
-// create todo item
-function createItem(title, description, dueDate, priority) {
-  return { title, description, dueDate, priority, status: "Pending" };
-}
-
-// put the item inside the chosen list
-function assignItemToList(todoItem, list) {
-  list.items.push(todoItem);
-}
 
 // default list and items to populate the page
 const defaultList = createList("default list");
@@ -44,71 +30,9 @@ assignItemToList(defaultItem1, defaultList);
 assignItemToList(defaultItem2, defaultList);
 assignItemToList(defaultItem3, defaultList);
 
-const { addItemBtn, domList } = displayTodoList(defaultList);
+displayTodoList(defaultList);
 
 // add new todo to the list
-addItemBtn.addEventListener("click", () => {
-  const newItem = createItem("-", "-", "-", "-");
-  assignItemToList(newItem, defaultList);
-  // Update the existing list with the new item
-  const domItem = document.createElement("li");
-
-  const domItemTitle = document.createElement("span");
-  domItemTitle.textContent = "Title: ";
-
-  const domItemTitleValue = document.createElement("span");
-  domItemTitleValue.textContent = "<Change here>";
-  domItemTitleValue.contentEditable = true;
-  domItemTitleValue.addEventListener("input", () => {
-    // Update the title when the user edits it
-    newItem.title = domItemTitleValue.textContent;
-  });
-
-  const domItemDescription = document.createElement("span");
-  domItemDescription.textContent = " Description: ";
-
-  const domItemDescriptionValue = document.createElement("span");
-  domItemDescriptionValue.textContent = "<Change here>";
-  domItemDescriptionValue.contentEditable = true;
-  domItemDescriptionValue.addEventListener("input", () => {
-    // Update the description when the user edits it
-    newItem.description = domItemDescriptionValue.textContent;
-  });
-
-  const domItemDueDate = document.createElement("span");
-  domItemDueDate.textContent = " Due Date: ";
-
-  const domItemDueDateValue = document.createElement("span");
-  domItemDueDateValue.textContent = "<Change here>";
-  domItemDueDateValue.contentEditable = true;
-  domItemDueDateValue.addEventListener("input", () => {
-    // Update the due date when the user edits it
-    newItem.dueDate = domItemDueDateValue.textContent;
-  });
-
-  const domItemPriority = document.createElement("span");
-  domItemPriority.textContent = " Priority: ";
-
-  const domItemPriorityValue = document.createElement("span");
-  domItemPriorityValue.textContent = "<Change here>";
-  domItemPriorityValue.contentEditable = true;
-  domItemPriorityValue.addEventListener("input", () => {
-    // Update the priority when the user edits it
-    newItem.priority = domItemPriorityValue.textContent;
-  });
-
-  domItem.appendChild(domItemTitle);
-  domItem.appendChild(domItemTitleValue);
-  domItem.appendChild(domItemDescription);
-  domItem.appendChild(domItemDescriptionValue);
-  domItem.appendChild(domItemDueDate);
-  domItem.appendChild(domItemDueDateValue);
-  domItem.appendChild(domItemPriority);
-  domItem.appendChild(domItemPriorityValue);
-
-  // domItem.textContent = `Title: ${newItem.title} / Description: ${newItem.description} / Due Date: ${newItem.dueDate} / Priority: ${newItem.priority}`;
-  domList.insertBefore(domItem, addItemBtn); // put the item before the add button
-});
 
 // chatgpt working solution:
 // function createEditableItem(todoItem) {
