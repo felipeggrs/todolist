@@ -6,30 +6,13 @@ import { createList, createItem, assignItemToList } from "./engine";
 // default list and items to populate the page
 const defaultList = createList("default list");
 const defaultItem1 = createItem(
-  "Wake up",
-  "Time to leave the bed",
-  "September 20, 2023",
-  "High"
-);
-
-const defaultItem2 = createItem(
-  "Sleep",
-  "Time to go to bed",
-  "September 21, 2023",
-  "High"
-);
-
-const defaultItem3 = createItem(
-  "Study",
-  "Time to study",
-  "September 22, 2023",
-  "Low"
+  "<Change title>",
+  "<Change description>",
+  "<Select due date>",
+  "<Select priority>"
 );
 
 assignItemToList(defaultItem1, defaultList);
-assignItemToList(defaultItem2, defaultList);
-assignItemToList(defaultItem3, defaultList);
-
 displayTodoList(defaultList);
 
 const homeBtn = document.getElementById("homeBtn");
@@ -46,7 +29,19 @@ addProjectBtn.addEventListener("click", () => {
     const transformedUserInput = userInput.toLowerCase().replace(/\s+/g, "-");
     newProject.textContent = userInput;
     newProject.id = transformedUserInput;
+    const newList = createList(transformedUserInput);
+    assignItemToList(defaultItem1, newList);
     newProject.className = "project";
     projectContainer.appendChild(newProject);
+    console.log(newList);
+
+    const projectBtn = document.getElementsByClassName("project");
+    const projectArray = Array.from(projectBtn);
+
+    projectArray.forEach((project) => {
+      project.addEventListener("click", () => {
+        displayTodoList(newList);
+      });
+    });
   }
 });

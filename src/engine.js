@@ -13,4 +13,33 @@ function assignItemToList(todoItem, list) {
   list.items.push(todoItem);
 }
 
-export { createList, createItem, assignItemToList };
+// Update the title, description, due date and priority when the user edits it
+function updateListValues(
+  todoItem,
+  titleValue,
+  descValue,
+  dateValue,
+  priorityValue
+) {
+  titleValue.addEventListener("input", () => {
+    todoItem.title = titleValue.textContent;
+    console.log(todoItem);
+  });
+
+  descValue.addEventListener("input", () => {
+    todoItem.description = descValue.textContent;
+    console.log(todoItem);
+  });
+
+  dateValue.addEventListener("input", () => {
+    todoItem.dueDate = dateValue.textContent;
+    console.log(todoItem);
+  });
+
+  priorityValue.addEventListener("input", () => {
+    todoItem.priority = priorityValue.textContent;
+    console.log(todoItem);
+  });
+}
+
+export { createList, createItem, assignItemToList, updateListValues };
