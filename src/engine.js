@@ -1,3 +1,4 @@
+/* eslint-disable no-param-reassign */
 // create todo list
 function createList(title) {
   return { title, items: [] };

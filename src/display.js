@@ -8,25 +8,24 @@ export default function displayTodoList(todoList) {
   const listTitle = todoList.title;
   const domList = document.createElement("ul");
   domList.setAttribute("role", "list"); // css reset custom property
-  domList.textContent = listTitle;
+
+  // modify first char to uppercase to display as list title on the page
+  if (listTitle.length > 0) {
+    const upperListTitle =
+      listTitle.charAt(0).toUpperCase() + listTitle.slice(1);
+    domList.textContent = `${upperListTitle} List`;
+  }
 
   const contentContainer = document.getElementById("contentContainer");
   contentContainer.innerHTML = ""; // so it doesn't show multiple lists
   contentContainer.appendChild(domList);
-
-  // display each todo item inside the list
-  todoList.items.forEach((item) => {
-    const domItem = document.createElement("li");
-    domItem.textContent = `Title: ${item.title} / Description: ${item.description} / Due Date: ${item.dueDate} / Priority: ${item.priority}`;
-    domList.appendChild(domItem);
-  });
 
   // add todo item button
   const addItemBtn = document.createElement("button");
   addItemBtn.textContent = "Add";
   domList.appendChild(addItemBtn);
 
-  addItemBtn.addEventListener("click", () => {
+  function addNewItemToDom() {
     console.log(todoList);
     const newItem = createItem("-", "-", "-", "-");
     assignItemToList(newItem, todoList);
@@ -81,5 +80,8 @@ export default function displayTodoList(todoList) {
 
     // put the item before the add button
     domList.insertBefore(domItem, addItemBtn);
-  });
+    return { addNewItemToDom };
+  }
+
+  addItemBtn.addEventListener("click", addNewItemToDom);
 }
