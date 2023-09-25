@@ -25,11 +25,7 @@ export default function displayTodoList(todoList) {
   addItemBtn.textContent = "Add";
   domList.appendChild(addItemBtn);
 
-  function addNewItemToDom() {
-    console.log(todoList);
-    const newItem = createItem("-", "-", "-", "-");
-    assignItemToList(newItem, todoList);
-
+  function addNewItemToDom(item) {
     // Update the existing list with the new item
     const domItem = document.createElement("li");
 
@@ -39,6 +35,9 @@ export default function displayTodoList(todoList) {
     const domItemTitleValue = document.createElement("span");
     domItemTitleValue.textContent = "<Change here>";
     domItemTitleValue.contentEditable = true;
+    if (item.title !== "-") {
+      domItemTitleValue.textContent = item.title;
+    }
 
     // description
     const domItemDescription = document.createElement("span");
@@ -46,6 +45,9 @@ export default function displayTodoList(todoList) {
     const domItemDescriptionValue = document.createElement("span");
     domItemDescriptionValue.textContent = "<Change here>";
     domItemDescriptionValue.contentEditable = true;
+    if (item.description !== "-") {
+      domItemDescriptionValue.textContent = item.description;
+    }
 
     // date
     const domItemDueDate = document.createElement("span");
@@ -53,6 +55,9 @@ export default function displayTodoList(todoList) {
     const domItemDueDateValue = document.createElement("span");
     domItemDueDateValue.textContent = "<Change here>";
     domItemDueDateValue.contentEditable = true;
+    if (item.dueDate !== "-") {
+      domItemDueDateValue.textContent = item.dueDate;
+    }
 
     // priority
     const domItemPriority = document.createElement("span");
@@ -60,14 +65,9 @@ export default function displayTodoList(todoList) {
     const domItemPriorityValue = document.createElement("span");
     domItemPriorityValue.textContent = "<Change here>";
     domItemPriorityValue.contentEditable = true;
-
-    updateListValues(
-      newItem,
-      domItemTitleValue,
-      domItemDescriptionValue,
-      domItemDueDateValue,
-      domItemPriorityValue
-    );
+    if (item.priority !== "-") {
+      domItemPriorityValue.textContent = item.priority;
+    }
 
     domItem.appendChild(domItemTitle);
     domItem.appendChild(domItemTitleValue);
@@ -80,8 +80,30 @@ export default function displayTodoList(todoList) {
 
     // put the item before the add button
     domList.insertBefore(domItem, addItemBtn);
-    return { addNewItemToDom };
+
+    return {
+      domItemTitleValue,
+      domItemDescriptionValue,
+      domItemDueDateValue,
+      domItemPriorityValue,
+    };
   }
 
-  addItemBtn.addEventListener("click", addNewItemToDom);
+  // add todo item button behavior
+  addItemBtn.addEventListener("click", () => {
+    console.log(todoList);
+    const newItem = createItem("-", "-", "-", "-");
+    assignItemToList(newItem, todoList);
+
+    const item = addNewItemToDom(newItem);
+    updateListValues(
+      newItem,
+      item.domItemTitleValue,
+      item.domItemDescriptionValue,
+      item.domItemDueDateValue,
+      item.domItemPriorityValue
+    );
+  });
+
+  return { addNewItemToDom };
 }
