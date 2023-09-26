@@ -1,7 +1,7 @@
 /* eslint-disable no-alert */
 import "./styles.css";
 import displayTodoList from "./display";
-import { createList, updateListValues } from "./engine";
+import { createList } from "./engine";
 // import { formatDistance, subDays } from "date-fns";
 
 // default list and items to populate the page
@@ -40,16 +40,13 @@ addProjectBtn.addEventListener("click", () => {
     const newList = createList(transformedUserInput);
 
     // make each project display their list when clicked
-    const projectBtn = document.getElementsByClassName("project");
-    const projectArray = Array.from(projectBtn);
-    projectArray.forEach((project) => {
-      project.addEventListener("click", () => {
-        const display = displayTodoList(newList);
-        console.log(newList);
-        newList.items.forEach((item) => {
-          console.log(item);
-          display.addNewItemToDom(item);
-        });
+    const projectBtn = document.getElementById(`${transformedUserInput}`);
+    projectBtn.addEventListener("click", () => {
+      const display = displayTodoList(newList);
+      console.log(newList);
+      newList.items.forEach((item) => {
+        console.log(item);
+        display.addNewItemToDom(item);
       });
     });
   }
