@@ -1,7 +1,7 @@
 /* eslint-disable no-alert */
 import "./styles.css";
 import displayTodoList from "./display";
-import { createList } from "./engine";
+import { createList, updateListValues } from "./engine";
 // import { formatDistance, subDays } from "date-fns";
 
 // default list and items to populate the page
@@ -15,7 +15,14 @@ homeBtn.addEventListener("click", () => {
 
   defaultList.items.forEach((item) => {
     console.log(item);
-    display.addNewItemToDom(item);
+    const newItem = display.addNewItemToDom(item);
+    updateListValues(
+      item,
+      newItem.domItemTitleValue,
+      newItem.domItemDescriptionValue,
+      newItem.domItemDueDateValue,
+      newItem.domItemPriorityValue
+    );
   });
 });
 
@@ -46,7 +53,14 @@ addProjectBtn.addEventListener("click", () => {
       console.log(newList);
       newList.items.forEach((item) => {
         console.log(item);
-        display.addNewItemToDom(item);
+        const newItem = display.addNewItemToDom(item);
+        updateListValues(
+          item,
+          newItem.domItemTitleValue,
+          newItem.domItemDescriptionValue,
+          newItem.domItemDueDateValue,
+          newItem.domItemPriorityValue
+        );
       });
     });
   }
