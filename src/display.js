@@ -1,5 +1,10 @@
 import "./styles.css";
-import { createItem, assignItemToList, updateListValues } from "./engine";
+import {
+  createItem,
+  assignItemToList,
+  updateListValues,
+  deleteItem,
+} from "./engine";
 
 // module to handle DOM elements
 
@@ -33,7 +38,7 @@ export default function displayTodoList(todoList) {
     const domItemTitle = document.createElement("span");
     domItemTitle.textContent = "Title: ";
     const domItemTitleValue = document.createElement("span");
-    domItemTitleValue.textContent = "<Change here>";
+    domItemTitleValue.textContent = "<Select title>";
     domItemTitleValue.contentEditable = true;
     if (item.title !== "-") {
       domItemTitleValue.textContent = item.title;
@@ -42,9 +47,8 @@ export default function displayTodoList(todoList) {
     // description
     const domItemDescription = document.createElement("span");
     domItemDescription.textContent = " Description: ";
-    const domItemDescriptionValue = document.createElement("span");
-    domItemDescriptionValue.textContent = "<Change here>";
-    domItemDescriptionValue.contentEditable = true;
+    const domItemDescriptionValue = document.createElement("textarea");
+    domItemDescriptionValue.placeholder = "Describe your task here";
     if (item.description !== "-") {
       domItemDescriptionValue.textContent = item.description;
     }
@@ -52,31 +56,43 @@ export default function displayTodoList(todoList) {
     // date
     const domItemDueDate = document.createElement("span");
     domItemDueDate.textContent = " Due Date: ";
-    const domItemDueDateValue = document.createElement("span");
-    domItemDueDateValue.textContent = "<Change here>";
-    domItemDueDateValue.contentEditable = true;
-    if (item.dueDate !== "-") {
-      domItemDueDateValue.textContent = item.dueDate;
-    }
+
+    const domItemDueDateValue = document.createElement("input");
+    domItemDueDateValue.type = "date";
+    // maintains the selected date displayed correctly after page changes
+    domItemDueDateValue.value = item.dueDate;
 
     // priority
     const domItemPriority = document.createElement("span");
     domItemPriority.textContent = " Priority: ";
-    const domItemPriorityValue = document.createElement("span");
-    domItemPriorityValue.textContent = "<Change here>";
-    domItemPriorityValue.contentEditable = true;
-    if (item.priority !== "-") {
-      domItemPriorityValue.textContent = item.priority;
-    }
+    const domItemPriorityValue = document.createElement("select");
+    domItemPriorityValue.setAttribute("id", "mySelect");
+    const options = ["-", "Low", "Medium", "High"];
+    options.forEach((option) => {
+      const optionTag = document.createElement("option");
+      optionTag.value = option;
+      optionTag.text = option;
+      domItemPriorityValue.appendChild(optionTag);
+    });
+    // maintains the selected priority displayed correctly after page changes
+    domItemPriorityValue.selectedIndex = options.indexOf(item.priority);
+
+    // const itemDeleteBtn = document.createElement("button");
+    // itemDeleteBtn.textContent = "X";
+    // const itemIndex = todoList.items.indexOf(item);
+    // console.log(itemIndex);
+
+    // itemDeleteBtn.addEventListener("click", deleteItem(itemIndex, todoList));
 
     domItem.appendChild(domItemTitle);
     domItem.appendChild(domItemTitleValue);
-    domItem.appendChild(domItemDescription);
-    domItem.appendChild(domItemDescriptionValue);
     domItem.appendChild(domItemDueDate);
     domItem.appendChild(domItemDueDateValue);
     domItem.appendChild(domItemPriority);
     domItem.appendChild(domItemPriorityValue);
+    domItem.appendChild(domItemDescription);
+    domItem.appendChild(domItemDescriptionValue);
+    // domItem.appendChild(itemDeleteBtn);
 
     // put the item before the add button
     domList.insertBefore(domItem, addItemBtn);

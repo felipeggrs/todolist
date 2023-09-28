@@ -9,6 +9,11 @@ function createItem(title, description, dueDate, priority) {
   return { title, description, dueDate, priority, status: "Pending" };
 }
 
+// delete todoitem
+function deleteItem(todoItemIndex, todoList) {
+  todoList.items.splice(todoItemIndex, 1);
+}
+
 // put the item inside the chosen list
 function assignItemToList(todoItem, list) {
   list.items.push(todoItem);
@@ -28,19 +33,25 @@ function updateListValues(
   });
 
   descValue.addEventListener("input", () => {
-    todoItem.description = descValue.textContent;
+    todoItem.description = descValue.value;
     console.log(todoItem);
   });
 
   dateValue.addEventListener("input", () => {
-    todoItem.dueDate = dateValue.textContent;
+    todoItem.dueDate = dateValue.value;
     console.log(todoItem);
   });
 
-  priorityValue.addEventListener("input", () => {
-    todoItem.priority = priorityValue.textContent;
+  priorityValue.addEventListener("change", () => {
+    todoItem.priority = priorityValue.value;
     console.log(todoItem);
   });
 }
 
-export { createList, createItem, assignItemToList, updateListValues };
+export {
+  createList,
+  createItem,
+  deleteItem,
+  assignItemToList,
+  updateListValues,
+};
