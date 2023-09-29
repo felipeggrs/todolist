@@ -6,12 +6,19 @@ function createList(title) {
 
 // create todo item
 function createItem(title, description, dueDate, priority) {
-  return { title, description, dueDate, priority, status: "Pending" };
+  return {
+    title,
+    description,
+    dueDate,
+    priority,
+    status: "Pending",
+  };
 }
 
 // delete todoitem
 function deleteItem(todoItemIndex, todoList) {
   todoList.items.splice(todoItemIndex, 1);
+  console.log(todoList);
 }
 
 // put the item inside the chosen list

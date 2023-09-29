@@ -77,13 +77,19 @@ export default function displayTodoList(todoList) {
     // maintains the selected priority displayed correctly after page changes
     domItemPriorityValue.selectedIndex = options.indexOf(item.priority);
 
-    // const itemDeleteBtn = document.createElement("button");
-    // itemDeleteBtn.textContent = "X";
-    // const itemIndex = todoList.items.indexOf(item);
-    // console.log(itemIndex);
+    // delete todoList button
+    const itemDeleteBtn = document.createElement("button");
+    itemDeleteBtn.textContent = "X";
+    let itemIndex = todoList.items.indexOf(item);
 
-    // itemDeleteBtn.addEventListener("click", deleteItem(itemIndex, todoList));
+    itemDeleteBtn.addEventListener("click", () => {
+      // update item index before deleting
+      itemIndex = todoList.items.indexOf(item);
+      deleteItem(itemIndex, todoList);
+      domList.removeChild(domItem);
+    });
 
+    // append all the todo item properties to the li tag
     domItem.appendChild(domItemTitle);
     domItem.appendChild(domItemTitleValue);
     domItem.appendChild(domItemDueDate);
@@ -92,7 +98,7 @@ export default function displayTodoList(todoList) {
     domItem.appendChild(domItemPriorityValue);
     domItem.appendChild(domItemDescription);
     domItem.appendChild(domItemDescriptionValue);
-    // domItem.appendChild(itemDeleteBtn);
+    domItem.appendChild(itemDeleteBtn);
 
     // put the item before the add button
     domList.insertBefore(domItem, addItemBtn);
