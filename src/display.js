@@ -8,7 +8,7 @@ import {
 
 // module to handle DOM elements
 
-export default function displayTodoList(todoList) {
+export default function displayTodoList(todoList, defaultList) {
   // display list title
   const listTitle = todoList.title;
   const domList = document.createElement("ul");
@@ -28,7 +28,10 @@ export default function displayTodoList(todoList) {
   // add todo item button
   const addItemBtn = document.createElement("button");
   addItemBtn.textContent = "Add";
-  domList.appendChild(addItemBtn);
+
+  if (todoList !== defaultList) {
+    domList.appendChild(addItemBtn);
+  }
 
   function addNewItemToDom(item) {
     // Update the existing list with the new item
@@ -81,11 +84,13 @@ export default function displayTodoList(todoList) {
     const itemDeleteBtn = document.createElement("button");
     itemDeleteBtn.textContent = "X";
     let itemIndex = todoList.items.indexOf(item);
+    let defaultIndex = defaultList.items.indexOf(item);
 
     itemDeleteBtn.addEventListener("click", () => {
       // update item index before deleting
       itemIndex = todoList.items.indexOf(item);
-      deleteItem(itemIndex, todoList);
+      defaultIndex = defaultList.items.indexOf(item);
+      deleteItem(itemIndex, todoList, defaultList, defaultIndex);
       domList.removeChild(domItem);
     });
 
@@ -98,24 +103,33 @@ export default function displayTodoList(todoList) {
     domItem.appendChild(domItemPriorityValue);
     domItem.appendChild(domItemDescription);
     domItem.appendChild(domItemDescriptionValue);
-    domItem.appendChild(itemDeleteBtn);
+    // hide remove button from home page
+    if (todoList !== defaultList) {
+      domItem.appendChild(itemDeleteBtn);
+      // put the item before the add button on project lists
+      domList.insertBefore(domItem, addItemBtn);
+    }
 
-    // put the item before the add button
-    domList.insertBefore(domItem, addItemBtn);
+    if (todoList === defaultList) {
+      // add the item to the defautlist
+      domList.appendChild(domItem);
+    }
 
     return {
       domItemTitleValue,
       domItemDescriptionValue,
       domItemDueDateValue,
       domItemPriorityValue,
+      itemDeleteBtn,
     };
   }
 
   // add todo item button behavior
   addItemBtn.addEventListener("click", () => {
     console.log(todoList);
+
     const newItem = createItem("-", "-", "-", "-");
-    assignItemToList(newItem, todoList);
+    assignItemToList(newItem, todoList, defaultList);
 
     const item = addNewItemToDom(newItem);
     updateListValues(
@@ -127,5 +141,5 @@ export default function displayTodoList(todoList) {
     );
   });
 
-  return { addNewItemToDom };
+  return { addNewItemToDom, addItemBtn, domList };
 }

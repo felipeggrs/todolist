@@ -16,14 +16,18 @@ function createItem(title, description, dueDate, priority) {
 }
 
 // delete todoitem
-function deleteItem(todoItemIndex, todoList) {
+function deleteItem(todoItemIndex, todoList, defaultList, defaultIndex) {
+  defaultList.items.splice(defaultIndex, 1);
   todoList.items.splice(todoItemIndex, 1);
   console.log(todoList);
 }
 
 // put the item inside the chosen list
-function assignItemToList(todoItem, list) {
-  list.items.push(todoItem);
+function assignItemToList(todoItem, list, defaultList) {
+  defaultList.items.push(todoItem);
+  if (list !== defaultList) {
+    list.items.push(todoItem);
+  }
 }
 
 // Update the title, description, due date and priority when the user edits it

@@ -2,17 +2,17 @@
 import "./styles.css";
 import displayTodoList from "./display";
 import { createList, updateListValues } from "./engine";
-// import { formatDistance, subDays } from "date-fns";
 
 // default list and items to populate the page
-const defaultList = createList("default");
-displayTodoList(defaultList);
+const defaultList = createList("All Projects");
+displayTodoList(defaultList, defaultList);
 
+// button that takes to Home page
 const homeBtn = document.getElementById("homeBtn");
 homeBtn.addEventListener("click", () => {
-  const display = displayTodoList(defaultList);
+  const display = displayTodoList(defaultList, defaultList);
   console.log(defaultList);
-
+  // display each item of the list
   defaultList.items.forEach((item) => {
     console.log(item);
     const newItem = display.addNewItemToDom(item);
@@ -49,7 +49,7 @@ addProjectBtn.addEventListener("click", () => {
     // make each project display their list when clicked
     const projectBtn = document.getElementById(`${transformedUserInput}`);
     projectBtn.addEventListener("click", () => {
-      const display = displayTodoList(newList);
+      const display = displayTodoList(newList, defaultList);
       console.log(newList);
       newList.items.forEach((item) => {
         console.log(item);
