@@ -1,14 +1,18 @@
+/* eslint-disable no-use-before-define */
 import "./styles.css";
 import {
   createItem,
   assignItemToList,
   updateListValues,
   deleteItem,
+  createList,
 } from "./engine";
 
 // module to handle DOM elements
 
-export default function displayTodoList(todoList, defaultList) {
+const completedList = createList("completed");
+
+function displayTodoList(todoList, defaultList) {
   // display list title
   const listTitle = todoList.title;
   const domList = document.createElement("ul");
@@ -29,7 +33,7 @@ export default function displayTodoList(todoList, defaultList) {
   const addItemBtn = document.createElement("button");
   addItemBtn.textContent = "Add";
 
-  if (todoList !== defaultList) {
+  if (todoList !== defaultList && todoList !== completedList) {
     domList.appendChild(addItemBtn);
   }
 
@@ -94,6 +98,19 @@ export default function displayTodoList(todoList, defaultList) {
       domList.removeChild(domItem);
     });
 
+    // complete todoItem button
+    const itemCompleteBtn = document.createElement("button");
+    itemCompleteBtn.textContent = "Done";
+
+    itemCompleteBtn.addEventListener("click", () => {
+      // update item index before deleting
+      itemIndex = todoList.items.indexOf(item);
+      defaultIndex = defaultList.items.indexOf(item);
+      deleteItem(itemIndex, todoList, defaultList, defaultIndex, completedList);
+      console.log(completedList);
+      domList.removeChild(domItem);
+    });
+
     // append all the todo item properties to the li tag
     domItem.appendChild(domItemTitle);
     domItem.appendChild(domItemTitleValue);
@@ -103,16 +120,23 @@ export default function displayTodoList(todoList, defaultList) {
     domItem.appendChild(domItemPriorityValue);
     domItem.appendChild(domItemDescription);
     domItem.appendChild(domItemDescriptionValue);
+
     // hide remove button from home page
-    if (todoList !== defaultList) {
+    if (todoList !== defaultList && todoList !== completedList) {
       domItem.appendChild(itemDeleteBtn);
+      domItem.appendChild(itemCompleteBtn);
       // put the item before the add button on project lists
       domList.insertBefore(domItem, addItemBtn);
     }
 
-    if (todoList === defaultList) {
+    if (todoList === defaultList || todoList === completedList) {
       // add the item to the defautlist
       domList.appendChild(domItem);
+
+      // show each item's original project in the default list
+      // const originalList = document.createElement("div");
+      // originalList.textContent = `Project: `;
+      // domItem.appendChild(originalList);
     }
 
     return {
@@ -121,6 +145,7 @@ export default function displayTodoList(todoList, defaultList) {
       domItemDueDateValue,
       domItemPriorityValue,
       itemDeleteBtn,
+      domItem,
     };
   }
 
@@ -143,3 +168,5 @@ export default function displayTodoList(todoList, defaultList) {
 
   return { addNewItemToDom, addItemBtn, domList };
 }
+
+export { displayTodoList, completedList };

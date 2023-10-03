@@ -1,21 +1,22 @@
 /* eslint-disable no-alert */
 import "./styles.css";
-import displayTodoList from "./display";
+import { displayTodoList, completedList } from "./display";
 import { createList, updateListValues } from "./engine";
 
 // default list and items to populate the page
 const defaultList = createList("All Projects");
 displayTodoList(defaultList, defaultList);
 
-// button that takes to Home page
+// HOME
 const homeBtn = document.getElementById("homeBtn");
 homeBtn.addEventListener("click", () => {
   const display = displayTodoList(defaultList, defaultList);
   console.log(defaultList);
+
   // display each item of the list
   defaultList.items.forEach((item) => {
-    console.log(item);
     const newItem = display.addNewItemToDom(item);
+    console.log(item);
     updateListValues(
       item,
       newItem.domItemTitleValue,
@@ -26,7 +27,25 @@ homeBtn.addEventListener("click", () => {
   });
 });
 
-// button for the user to add new projects
+const completedBtn = document.getElementById("completedBtn");
+completedBtn.addEventListener("click", () => {
+  console.log(completedList);
+  const display = displayTodoList(completedList, defaultList);
+
+  completedList.items.forEach((item) => {
+    const newItem = display.addNewItemToDom(item);
+    console.log(item);
+    updateListValues(
+      item,
+      newItem.domItemTitleValue,
+      newItem.domItemDescriptionValue,
+      newItem.domItemDueDateValue,
+      newItem.domItemPriorityValue
+    );
+  });
+});
+
+// NEW PROJECTS
 const addProjectBtn = document.getElementById("addProjectBtn");
 addProjectBtn.addEventListener("click", () => {
   // grab user input for the project's title

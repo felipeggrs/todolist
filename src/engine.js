@@ -16,9 +16,17 @@ function createItem(title, description, dueDate, priority) {
 }
 
 // delete todoitem
-function deleteItem(todoItemIndex, todoList, defaultList, defaultIndex) {
+function deleteItem(
+  todoItemIndex,
+  todoList,
+  defaultList,
+  defaultIndex,
+  completedList
+) {
   defaultList.items.splice(defaultIndex, 1);
-  todoList.items.splice(todoItemIndex, 1);
+  const [todoItem] = todoList.items.splice(todoItemIndex, 1);
+
+  completedList.items.push(todoItem);
   console.log(todoList);
 }
 
