@@ -34,6 +34,11 @@ completedBtn.addEventListener("click", () => {
 
   completedList.items.forEach((item) => {
     const newItem = display.addNewItemToDom(item);
+    item.status = "Completed";
+    newItem.domItemTitleValue.contentEditable = false;
+    newItem.domItemDescriptionValue.setAttribute("readonly", true);
+    newItem.domItemDueDateValue.setAttribute("readonly", true);
+    newItem.domItemPriorityValue.setAttribute("disabled", true);
     console.log(item);
     updateListValues(
       item,

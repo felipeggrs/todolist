@@ -31,6 +31,7 @@ function displayTodoList(todoList, defaultList) {
 
   // add todo item button
   const addItemBtn = document.createElement("button");
+  addItemBtn.id = "addItemBtn";
   addItemBtn.textContent = "Add";
 
   if (todoList !== defaultList && todoList !== completedList) {
@@ -43,9 +44,10 @@ function displayTodoList(todoList, defaultList) {
 
     // title
     const domItemTitle = document.createElement("span");
+    domItemTitle.id = "itemProperty";
     domItemTitle.textContent = "Title: ";
     const domItemTitleValue = document.createElement("span");
-    domItemTitleValue.textContent = "<Select title>";
+    domItemTitleValue.textContent = "Change here";
     domItemTitleValue.contentEditable = true;
     if (item.title !== "-") {
       domItemTitleValue.textContent = item.title;
@@ -53,6 +55,7 @@ function displayTodoList(todoList, defaultList) {
 
     // description
     const domItemDescription = document.createElement("span");
+    domItemDescription.id = "itemProperty";
     domItemDescription.textContent = " Description: ";
     const domItemDescriptionValue = document.createElement("textarea");
     domItemDescriptionValue.placeholder = "Describe your task here";
@@ -62,6 +65,7 @@ function displayTodoList(todoList, defaultList) {
 
     // date
     const domItemDueDate = document.createElement("span");
+    domItemDueDate.id = "itemProperty";
     domItemDueDate.textContent = " Due Date: ";
 
     const domItemDueDateValue = document.createElement("input");
@@ -71,6 +75,7 @@ function displayTodoList(todoList, defaultList) {
 
     // priority
     const domItemPriority = document.createElement("span");
+    domItemPriority.id = "itemProperty";
     domItemPriority.textContent = " Priority: ";
     const domItemPriorityValue = document.createElement("select");
     domItemPriorityValue.setAttribute("id", "mySelect");
