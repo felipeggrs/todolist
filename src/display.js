@@ -112,7 +112,6 @@ function displayTodoList(todoList, defaultList) {
       itemIndex = todoList.items.indexOf(item);
       defaultIndex = defaultList.items.indexOf(item);
       deleteItem(itemIndex, todoList, defaultList, defaultIndex, completedList);
-      console.log(completedList);
       domList.removeChild(domItem);
     });
 

@@ -1,7 +1,34 @@
 /* eslint-disable no-param-reassign */
 // create todo list
+
+const allLists = [];
+
 function createList(title) {
-  return { title, items: [] };
+  const newList = { title, items: [] };
+
+  // Push the newly created list into the 'allLists' array
+  allLists.push(newList);
+  return newList;
+}
+
+function deleteList(title) {
+  const indexToDelete = allLists.findIndex((list) => list.title === title);
+
+  if (indexToDelete !== -1) {
+    if (allLists[indexToDelete].items.length === 0) {
+      // Delete the list itself
+      allLists.splice(indexToDelete, 1);
+
+      const projectContainer = document.getElementById("projectContainer");
+      const individualContainer = document.getElementById(
+        "individualContainer"
+      );
+      projectContainer.removeChild(individualContainer);
+
+      return;
+    }
+    alert("Please clear the list before deleting it");
+  }
 }
 
 // create todo item
@@ -26,8 +53,9 @@ function deleteItem(
   defaultList.items.splice(defaultIndex, 1);
   const [todoItem] = todoList.items.splice(todoItemIndex, 1);
 
-  completedList.items.push(todoItem);
-  console.log(todoList);
+  if (completedList) {
+    completedList.items.push(todoItem);
+  }
 }
 
 // put the item inside the chosen list
@@ -69,6 +97,7 @@ function updateListValues(
 
 export {
   createList,
+  deleteList,
   createItem,
   deleteItem,
   assignItemToList,

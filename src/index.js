@@ -1,15 +1,15 @@
 /* eslint-disable no-alert */
 import "./styles.css";
 import { displayTodoList, completedList } from "./display";
-import { createList, updateListValues } from "./engine";
+import { createList, updateListValues, deleteList } from "./engine";
+import deleteIconImg from "./img/x-square.svg";
 
 // default list and items to populate the page
 const defaultList = createList("All Projects");
 displayTodoList(defaultList, defaultList);
 
 // HOME
-const homeBtn = document.getElementById("homeBtn");
-homeBtn.addEventListener("click", () => {
+function displayHome() {
   const display = displayTodoList(defaultList, defaultList);
   console.log(defaultList);
 
@@ -25,8 +25,12 @@ homeBtn.addEventListener("click", () => {
       newItem.domItemPriorityValue
     );
   });
-});
+}
 
+const homeBtn = document.getElementById("homeBtn");
+homeBtn.addEventListener("click", displayHome);
+
+// COMPLETED
 const completedBtn = document.getElementById("completedBtn");
 completedBtn.addEventListener("click", () => {
   console.log(completedList);
@@ -34,6 +38,7 @@ completedBtn.addEventListener("click", () => {
 
   completedList.items.forEach((item) => {
     const newItem = display.addNewItemToDom(item);
+    // eslint-disable-next-line no-param-reassign
     item.status = "Completed";
     newItem.domItemTitleValue.contentEditable = false;
     newItem.domItemDescriptionValue.setAttribute("readonly", true);
@@ -50,7 +55,7 @@ completedBtn.addEventListener("click", () => {
   });
 });
 
-// NEW PROJECTS
+// ADD PROJECTS
 const addProjectBtn = document.getElementById("addProjectBtn");
 addProjectBtn.addEventListener("click", () => {
   // grab user input for the project's title
@@ -58,9 +63,22 @@ addProjectBtn.addEventListener("click", () => {
   if (userInput !== "null") {
     // add new project to the sidebar
     const projectContainer = document.getElementById("projectContainer");
-    const newProject = document.createElement("div");
+    const individualContainer = document.createElement("div");
+    individualContainer.id = "individualContainer";
+
+    const newProject = document.createElement("span");
+    const deleteProject = document.createElement("span");
+    const deleteIcon = document.createElement("img");
+    deleteProject.setAttribute("class", "iconContainer");
+
+    deleteIcon.src = deleteIconImg;
+    deleteIcon.alt = "Delete project button";
     newProject.textContent = userInput;
-    projectContainer.appendChild(newProject);
+
+    projectContainer.appendChild(individualContainer);
+    individualContainer.appendChild(newProject);
+    individualContainer.appendChild(deleteProject);
+    deleteProject.appendChild(deleteIcon);
 
     // modify user input to assign manageable IDs
     const transformedUserInput = userInput.toLowerCase().replace(/\s+/g, "-");
@@ -86,6 +104,14 @@ addProjectBtn.addEventListener("click", () => {
           newItem.domItemPriorityValue
         );
       });
+    });
+
+    deleteIcon.addEventListener("click", () => {
+      deleteList(newList.title);
+
+      if (newList.items.length === 0) {
+        displayHome();
+      }
     });
   }
 });
