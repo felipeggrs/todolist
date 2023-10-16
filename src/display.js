@@ -22,7 +22,11 @@ function displayTodoList(todoList, defaultList) {
   if (listTitle.length > 0) {
     const upperListTitle =
       listTitle.charAt(0).toUpperCase() + listTitle.slice(1);
-    domList.textContent = `${upperListTitle} List`;
+    const domListTitle = document.createElement("div");
+    domListTitle.textContent = `${upperListTitle} List`;
+    domListTitle.id = "domListTitle";
+    domList.appendChild(domListTitle);
+    // domList.textContent = `${upperListTitle} List`;
   }
 
   const contentContainer = document.getElementById("contentContainer");
@@ -32,7 +36,7 @@ function displayTodoList(todoList, defaultList) {
   // add todo item button
   const addItemBtn = document.createElement("button");
   addItemBtn.id = "addItemBtn";
-  addItemBtn.textContent = "Add";
+  addItemBtn.textContent = "Add New Item";
 
   if (todoList !== defaultList && todoList !== completedList) {
     domList.appendChild(addItemBtn);
@@ -41,6 +45,7 @@ function displayTodoList(todoList, defaultList) {
   function addNewItemToDom(item) {
     // Update the existing list with the new item
     const domItem = document.createElement("li");
+    domItem.setAttribute("class", "todoCard");
 
     // title
     const domItemTitle = document.createElement("span");
