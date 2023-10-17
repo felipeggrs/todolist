@@ -5,23 +5,27 @@ const allLists = [];
 
 function createList(title) {
   const newList = { title, items: [] };
+  console.log(allLists);
 
   // Push the newly created list into the 'allLists' array
   allLists.push(newList);
   return newList;
 }
 
-function deleteList(title) {
+function deleteList(title, transformedUserInput) {
   const indexToDelete = allLists.findIndex((list) => list.title === title);
+  console.log(allLists);
+  console.log(indexToDelete);
 
   if (indexToDelete !== -1) {
     if (allLists[indexToDelete].items.length === 0) {
       // Delete the list itself
+      console.log(allLists[indexToDelete]);
       allLists.splice(indexToDelete, 1);
 
       const projectContainer = document.getElementById("projectContainer");
       const individualContainer = document.getElementById(
-        "individualContainer"
+        `${transformedUserInput}Container`
       );
       projectContainer.removeChild(individualContainer);
 
@@ -76,22 +80,18 @@ function updateListValues(
 ) {
   titleValue.addEventListener("input", () => {
     todoItem.title = titleValue.textContent;
-    console.log(todoItem);
   });
 
   descValue.addEventListener("input", () => {
     todoItem.description = descValue.value;
-    console.log(todoItem);
   });
 
   dateValue.addEventListener("input", () => {
     todoItem.dueDate = dateValue.value;
-    console.log(todoItem);
   });
 
   priorityValue.addEventListener("change", () => {
     todoItem.priority = priorityValue.value;
-    console.log(todoItem);
   });
 }
 

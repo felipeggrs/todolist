@@ -11,12 +11,10 @@ displayTodoList(defaultList, defaultList);
 // HOME
 function displayHome() {
   const display = displayTodoList(defaultList, defaultList);
-  console.log(defaultList);
 
   // display each item of the list
   defaultList.items.forEach((item) => {
     const newItem = display.addNewItemToDom(item);
-    console.log(item);
     updateListValues(
       item,
       newItem.domItemTitleValue,
@@ -33,7 +31,6 @@ homeBtn.addEventListener("click", displayHome);
 // COMPLETED
 const completedBtn = document.getElementById("completedBtn");
 completedBtn.addEventListener("click", () => {
-  console.log(completedList);
   const display = displayTodoList(completedList, defaultList);
 
   completedList.items.forEach((item) => {
@@ -44,7 +41,6 @@ completedBtn.addEventListener("click", () => {
     newItem.domItemDescriptionValue.setAttribute("readonly", true);
     newItem.domItemDueDateValue.setAttribute("readonly", true);
     newItem.domItemPriorityValue.setAttribute("disabled", true);
-    console.log(item);
     updateListValues(
       item,
       newItem.domItemTitleValue,
@@ -64,7 +60,7 @@ addProjectBtn.addEventListener("click", () => {
     // add new project to the sidebar
     const projectContainer = document.getElementById("projectContainer");
     const individualContainer = document.createElement("div");
-    individualContainer.id = "individualContainer";
+    individualContainer.className = "individualContainer";
 
     const newProject = document.createElement("span");
     const deleteProject = document.createElement("span");
@@ -85,6 +81,8 @@ addProjectBtn.addEventListener("click", () => {
     newProject.id = transformedUserInput;
     newProject.className = "project";
 
+    individualContainer.id = `${transformedUserInput}Container`;
+
     // make list for the new project
     const newList = createList(transformedUserInput);
 
@@ -92,9 +90,7 @@ addProjectBtn.addEventListener("click", () => {
     const projectBtn = document.getElementById(`${transformedUserInput}`);
     projectBtn.addEventListener("click", () => {
       const display = displayTodoList(newList, defaultList);
-      console.log(newList);
       newList.items.forEach((item) => {
-        console.log(item);
         const newItem = display.addNewItemToDom(item);
         updateListValues(
           item,
@@ -107,7 +103,8 @@ addProjectBtn.addEventListener("click", () => {
     });
 
     deleteIcon.addEventListener("click", () => {
-      deleteList(newList.title);
+      console.log(newList.title);
+      deleteList(newList.title, transformedUserInput);
 
       if (newList.items.length === 0) {
         displayHome();

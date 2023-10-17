@@ -92,10 +92,26 @@ function displayTodoList(todoList, defaultList) {
       domItemPriorityValue.appendChild(optionTag);
     });
     // maintains the selected priority displayed correctly after page changes
-    domItemPriorityValue.selectedIndex = options.indexOf(item.priority);
+    const selectedPriority = options.indexOf(item.priority);
+    domItemPriorityValue.selectedIndex = selectedPriority;
+
+    // change BG color based on selected priority
+    // low / green
+    if (selectedPriority === 1) {
+      domItem.setAttribute("style", "background-color: rgb(192, 255, 192);");
+    }
+    // medium / yellow
+    if (selectedPriority === 2) {
+      domItem.setAttribute("style", "background-color: rgb(255, 255, 192);");
+    }
+    // high / red
+    if (selectedPriority === 3) {
+      domItem.setAttribute("style", "background-color: rgb(255, 192, 192);");
+    }
 
     // delete todoList button
     const itemDeleteBtn = document.createElement("button");
+    itemDeleteBtn.className = "itemDeleteBtn";
     itemDeleteBtn.textContent = "X";
     let itemIndex = todoList.items.indexOf(item);
     let defaultIndex = defaultList.items.indexOf(item);
@@ -110,7 +126,7 @@ function displayTodoList(todoList, defaultList) {
 
     // complete todoItem button
     const itemCompleteBtn = document.createElement("button");
-    itemCompleteBtn.textContent = "Done";
+    itemCompleteBtn.textContent = "Completed";
 
     itemCompleteBtn.addEventListener("click", () => {
       // update item index before deleting
@@ -132,7 +148,7 @@ function displayTodoList(todoList, defaultList) {
 
     // hide remove button from home page
     if (todoList !== defaultList && todoList !== completedList) {
-      domItem.appendChild(itemDeleteBtn);
+      domItem.insertBefore(itemDeleteBtn, domItem.firstChild);
       domItem.appendChild(itemCompleteBtn);
       // put the item before the add button on project lists
       domList.insertBefore(domItem, addItemBtn);
@@ -160,8 +176,6 @@ function displayTodoList(todoList, defaultList) {
 
   // add todo item button behavior
   addItemBtn.addEventListener("click", () => {
-    console.log(todoList);
-
     const newItem = createItem("-", "-", "-", "-");
     assignItemToList(newItem, todoList, defaultList);
 

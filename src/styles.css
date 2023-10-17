@@ -188,7 +188,7 @@ textarea {
   height: 100px;
 }
 
-#individualContainer {
+.individualContainer {
   display: flex;
   justify-content: space-between;
   background-color: #2980b9;
@@ -215,5 +215,10 @@ ul[role="list"] {
 }
 
 .todoCard {
-  display: grid;
+  display: flex;
+  flex-direction: column;
+}
+
+.itemDeleteBtn {
+  align-self: flex-end;
 }
