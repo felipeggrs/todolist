@@ -50,9 +50,10 @@ function displayTodoList(todoList, defaultList) {
     // title
     const domItemTitle = document.createElement("span");
     domItemTitle.id = "itemProperty";
-    domItemTitle.textContent = "Title: ";
+    // domItemTitle.textContent = "Title: ";
     const domItemTitleValue = document.createElement("span");
-    domItemTitleValue.textContent = "Change here";
+    domItemTitleValue.className = "domItemTitleValue";
+    domItemTitleValue.textContent = "Task name";
     domItemTitleValue.contentEditable = true;
     if (item.title !== "-") {
       domItemTitleValue.textContent = item.title;

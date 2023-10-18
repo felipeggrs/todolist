@@ -172,7 +172,8 @@ li {
 }
 
 #itemProperty {
-  color: red;
+  margin: 5px 0px;
+  /* color: red; */
 }
 
 ul {
@@ -203,8 +204,8 @@ textarea {
 
 ul[role="list"] {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-  grid-template-rows: 1fr 1fr repeat(2, 400px);
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  grid-template-rows: 100px 1fr repeat(2, 400px);
 }
 
 #domListTitle {
@@ -214,9 +215,20 @@ ul[role="list"] {
   justify-content: center;
 }
 
+.domItemTitleValue {
+  font-size: 25px;
+  align-self: center;
+  text-align: center;
+  overflow-x: auto;
+  white-space: nowrap;
+  width: 250px;
+  margin: 3px;
+}
+
 .todoCard {
   display: flex;
-  flex-direction: column;
+  flex-flow: column wrap;
+  width: 280px;
 }
 
 .itemDeleteBtn {
