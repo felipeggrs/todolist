@@ -123,6 +123,18 @@ body {
   gap: 5px;
 }
 
+.project {
+  max-width: 200px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+#userForm,
+#submitButton {
+  width: 200px;
+}
+
 .sideItem,
 .project,
 #addProjectBtn {

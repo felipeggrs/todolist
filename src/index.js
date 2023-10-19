@@ -54,61 +54,83 @@ completedBtn.addEventListener("click", () => {
 // ADD PROJECTS
 const addProjectBtn = document.getElementById("addProjectBtn");
 addProjectBtn.addEventListener("click", () => {
-  // grab user input for the project's title
-  const userInput = `${prompt("Type new project name")}`;
-  if (userInput !== "null") {
-    // add new project to the sidebar
-    const projectContainer = document.getElementById("projectContainer");
-    const individualContainer = document.createElement("div");
-    individualContainer.className = "individualContainer";
+  let userInput;
+  const projectContainer = document.getElementById("projectContainer");
 
-    const newProject = document.createElement("span");
-    const deleteProject = document.createElement("span");
-    const deleteIcon = document.createElement("img");
-    deleteProject.setAttribute("class", "iconContainer");
+  // input for the user to type the title for the new project
+  const userForm = document.createElement("input");
+  userForm.setAttribute("type", "text");
+  userForm.id = "userForm";
 
-    deleteIcon.src = deleteIconImg;
-    deleteIcon.alt = "Delete project button";
-    newProject.textContent = userInput;
+  // button to submit the user value above and create the new project
+  const submitButton = document.createElement("button");
+  submitButton.id = "submitButton";
+  submitButton.textContent = "Add new Project";
 
-    projectContainer.appendChild(individualContainer);
-    individualContainer.appendChild(newProject);
-    individualContainer.appendChild(deleteProject);
-    deleteProject.appendChild(deleteIcon);
+  projectContainer.appendChild(userForm);
+  projectContainer.appendChild(submitButton);
 
-    // modify user input to assign manageable IDs
-    const transformedUserInput = userInput.toLowerCase().replace(/\s+/g, "-");
-    newProject.id = transformedUserInput;
-    newProject.className = "project";
+  submitButton.addEventListener("click", () => {
+    userInput = userForm.value;
 
-    individualContainer.id = `${transformedUserInput}Container`;
+    projectContainer.removeChild(userForm);
+    projectContainer.removeChild(submitButton);
 
-    // make list for the new project
-    const newList = createList(transformedUserInput);
+    if (userInput !== "") {
+      // add new project to the sidebar
+      const individualContainer = document.createElement("div");
+      individualContainer.className = "individualContainer";
 
-    // make each project display their list when clicked
-    const projectBtn = document.getElementById(`${transformedUserInput}`);
-    projectBtn.addEventListener("click", () => {
-      const display = displayTodoList(newList, defaultList);
-      newList.items.forEach((item) => {
-        const newItem = display.addNewItemToDom(item);
-        updateListValues(
-          item,
-          newItem.domItemTitleValue,
-          newItem.domItemDescriptionValue,
-          newItem.domItemDueDateValue,
-          newItem.domItemPriorityValue
-        );
+      const newProject = document.createElement("span");
+      const deleteProject = document.createElement("span");
+      const deleteIcon = document.createElement("img");
+      deleteProject.setAttribute("class", "iconContainer");
+
+      deleteIcon.src = deleteIconImg;
+      deleteIcon.alt = "Delete project button";
+      newProject.textContent = userInput;
+
+      projectContainer.appendChild(individualContainer);
+      individualContainer.appendChild(newProject);
+      individualContainer.appendChild(deleteProject);
+      deleteProject.appendChild(deleteIcon);
+
+      // modify user input to assign manageable IDs
+      const transformedUserInput = userInput.toLowerCase().replace(/\s+/g, "-");
+      newProject.id = transformedUserInput;
+      newProject.className = "project";
+
+      individualContainer.id = `${transformedUserInput}Container`;
+
+      // make list for the new project
+      const newList = createList(transformedUserInput);
+
+      // make each project display their list when clicked
+      const projectBtn = document.getElementById(`${transformedUserInput}`);
+      projectBtn.addEventListener("click", () => {
+        const display = displayTodoList(newList, defaultList);
+        newList.items.forEach((item) => {
+          const newItem = display.addNewItemToDom(item);
+          updateListValues(
+            item,
+            newItem.domItemTitleValue,
+            newItem.domItemDescriptionValue,
+            newItem.domItemDueDateValue,
+            newItem.domItemPriorityValue
+          );
+        });
       });
-    });
 
-    deleteIcon.addEventListener("click", () => {
-      console.log(newList.title);
-      deleteList(newList.title, transformedUserInput);
+      deleteIcon.addEventListener("click", () => {
+        console.log(newList.title);
+        deleteList(newList.title, transformedUserInput);
 
-      if (newList.items.length === 0) {
-        displayHome();
-      }
-    });
-  }
+        if (newList.items.length === 0) {
+          displayHome();
+        }
+      });
+      return;
+    }
+    alert("Please specify the new Project's name");
+  });
 });

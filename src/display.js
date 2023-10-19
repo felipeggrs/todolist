@@ -7,6 +7,7 @@ import {
   deleteItem,
   createList,
 } from "./engine";
+import trashIconImg from "./img/trash.svg";
 
 // module to handle DOM elements
 
@@ -111,9 +112,10 @@ function displayTodoList(todoList, defaultList) {
     }
 
     // delete todoList button
-    const itemDeleteBtn = document.createElement("button");
+    const itemDeleteBtn = document.createElement("img");
     itemDeleteBtn.className = "itemDeleteBtn";
-    itemDeleteBtn.textContent = "X";
+    itemDeleteBtn.src = trashIconImg;
+    itemDeleteBtn.alt = "Delete item";
     let itemIndex = todoList.items.indexOf(item);
     let defaultIndex = defaultList.items.indexOf(item);
 
