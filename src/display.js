@@ -1,3 +1,4 @@
+/* eslint-disable no-plusplus */
 /* eslint-disable no-use-before-define */
 import "./styles.css";
 import {
@@ -6,12 +7,17 @@ import {
   updateListValues,
   deleteItem,
   createList,
+  saveProjectInStorage,
+  deleteList,
+  allLists,
 } from "./engine";
 import trashIconImg from "./img/trash.svg";
+import deleteIconImg from "./img/x-square.svg";
 
 // module to handle DOM elements
 
 const completedList = createList("completed");
+const projectContainer = document.getElementById("projectContainer");
 
 function displayTodoList(todoList, defaultList) {
   // display list title
@@ -182,17 +188,189 @@ function displayTodoList(todoList, defaultList) {
     const newItem = createItem("-", "-", "-", "-");
     assignItemToList(newItem, todoList, defaultList);
 
+    // save to localStorage
+    saveProjectInStorage(todoList.title, todoList);
+    console.log(todoList.title);
+
     const item = addNewItemToDom(newItem);
     updateListValues(
       newItem,
       item.domItemTitleValue,
       item.domItemDescriptionValue,
       item.domItemDueDateValue,
-      item.domItemPriorityValue
+      item.domItemPriorityValue,
+      todoList
     );
   });
 
   return { addNewItemToDom, addItemBtn, domList };
 }
 
-export { displayTodoList, completedList };
+// HOME
+function displayHome(defaultList) {
+  const display = displayTodoList(defaultList, defaultList);
+
+  // display each item of the list
+  defaultList.items.forEach((item) => {
+    const newItem = display.addNewItemToDom(item);
+    updateListValues(
+      item,
+      newItem.domItemTitleValue,
+      newItem.domItemDescriptionValue,
+      newItem.domItemDueDateValue,
+      newItem.domItemPriorityValue
+    );
+  });
+}
+
+function addProjectBtnListener(defaultList) {
+  let userInput;
+  // input for the user to type the title for the new project
+  const userForm = document.createElement("input");
+  userForm.setAttribute("type", "text");
+  userForm.id = "userForm";
+
+  // button to submit the user value above and create the new project
+  const submitButton = document.createElement("button");
+  submitButton.id = "submitButton";
+  submitButton.textContent = "Add new Project";
+
+  projectContainer.appendChild(userForm);
+  projectContainer.appendChild(submitButton);
+
+  submitButton.addEventListener("click", () => {
+    userInput = userForm.value;
+
+    projectContainer.removeChild(userForm);
+    projectContainer.removeChild(submitButton);
+
+    if (userInput !== "") {
+      // add new project to the sidebar
+      const individualContainer = document.createElement("div");
+      individualContainer.className = "individualContainer";
+
+      const newProject = document.createElement("span");
+      const deleteProject = document.createElement("span");
+      const deleteIcon = document.createElement("img");
+      deleteProject.setAttribute("class", "iconContainer");
+
+      deleteIcon.src = deleteIconImg;
+      deleteIcon.alt = "Delete project button";
+      newProject.textContent = userInput;
+
+      projectContainer.appendChild(individualContainer);
+      individualContainer.appendChild(newProject);
+      individualContainer.appendChild(deleteProject);
+      deleteProject.appendChild(deleteIcon);
+
+      // modify user input to assign manageable IDs
+      const transformedUserInput = userInput.toLowerCase().replace(/\s+/g, "-");
+      newProject.id = transformedUserInput;
+      newProject.className = "project";
+
+      individualContainer.id = `${transformedUserInput}Container`;
+
+      // make list for the new project
+      const newList = createList(transformedUserInput);
+      saveProjectInStorage(userInput, newList);
+
+      // make each project display their list when clicked
+      const projectBtn = document.getElementById(`${transformedUserInput}`);
+      projectBtn.addEventListener("click", () => {
+        const display = displayTodoList(newList, defaultList);
+        newList.items.forEach((item) => {
+          const newItem = display.addNewItemToDom(item);
+          updateListValues(
+            item,
+            newItem.domItemTitleValue,
+            newItem.domItemDescriptionValue,
+            newItem.domItemDueDateValue,
+            newItem.domItemPriorityValue
+          );
+        });
+      });
+
+      deleteIcon.addEventListener("click", () => {
+        console.log(newList.title);
+        deleteList(newList.title, transformedUserInput);
+
+        if (newList.items.length === 0) {
+          displayHome();
+        }
+      });
+      return;
+    }
+    alert("Please specify the new Project's name");
+  });
+}
+
+function displayActiveProjectsInStorage(defaultList) {
+  for (let i = 2; i < allLists.length; i++) {
+    // add new project to the sidebar
+    const individualContainer = document.createElement("div");
+    individualContainer.className = "individualContainer";
+
+    const newProject = document.createElement("span");
+    const deleteProject = document.createElement("span");
+    const deleteIcon = document.createElement("img");
+    deleteProject.setAttribute("class", "iconContainer");
+
+    deleteIcon.src = deleteIconImg;
+    deleteIcon.alt = "Delete project button";
+
+    // project title on sidebar
+    const { title } = allLists[i];
+    if (title.length > 0) {
+      // Convert the first character to uppercase and concatenate it with the rest of the string
+      const firstChar = title[0].toUpperCase();
+      const restOfTitle = title.slice(1);
+
+      const newTitle = firstChar + restOfTitle;
+
+      // Assign the newTitle to newProject.textContent
+      newProject.textContent = newTitle;
+    } else {
+      // Handle the case where the title is an empty string
+      newProject.textContent = title;
+    }
+
+    projectContainer.appendChild(individualContainer);
+    individualContainer.appendChild(newProject);
+    individualContainer.appendChild(deleteProject);
+    deleteProject.appendChild(deleteIcon);
+
+    deleteIcon.addEventListener("click", () => {
+      deleteList(allLists[i].title, allLists[i].title);
+    });
+
+    // // modify user input to assign manageable IDs
+    newProject.id = allLists[i].title;
+    newProject.className = "project";
+    individualContainer.id = `${allLists[i].title}Container`;
+
+    // make each project display their list when clicked
+    const projectBtn = document.getElementById(`${allLists[i].title}`);
+    projectBtn.addEventListener("click", () => {
+      const display = displayTodoList(allLists[i], defaultList);
+      allLists[i].items.forEach((item) => {
+        const newItem = display.addNewItemToDom(item);
+        updateListValues(
+          item,
+          newItem.domItemTitleValue,
+          newItem.domItemDescriptionValue,
+          newItem.domItemDueDateValue,
+          newItem.domItemPriorityValue,
+          allLists[i]
+        );
+      });
+    });
+  }
+}
+
+export {
+  displayTodoList,
+  completedList,
+  addProjectBtnListener,
+  displayHome,
+  displayActiveProjectsInStorage,
+};
