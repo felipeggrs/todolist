@@ -14,12 +14,21 @@ import {
 import trashIconImg from "./img/trash.svg";
 import deleteIconImg from "./img/x-square.svg";
 
-// module to handle DOM elements
+// default list and items to populate the page
+const defaultList = createList("All Projects");
+const completedList = getCompletedList();
 
-const completedList = createList("completed");
+function getCompletedList() {
+  const completed = JSON.parse(localStorage.getItem("completed"));
+  if (!completed) {
+    return createList("completed");
+  }
+  return completed;
+}
+
 const projectContainer = document.getElementById("projectContainer");
 
-function displayTodoList(todoList, defaultList) {
+function displayTodoList(todoList) {
   // display list title
   const listTitle = todoList.title;
   const domList = document.createElement("ul");
@@ -45,7 +54,11 @@ function displayTodoList(todoList, defaultList) {
   addItemBtn.id = "addItemBtn";
   addItemBtn.textContent = "Add New Item";
 
-  if (todoList !== defaultList && todoList !== completedList) {
+  if (
+    todoList !== defaultList &&
+    todoList !== completedList &&
+    todoList.title !== "All Projects"
+  ) {
     domList.appendChild(addItemBtn);
   }
 
@@ -103,6 +116,14 @@ function displayTodoList(todoList, defaultList) {
     const selectedPriority = options.indexOf(item.priority);
     domItemPriorityValue.selectedIndex = selectedPriority;
 
+    // not editable in Home page
+    if (todoList.title === "All Projects") {
+      domItemTitleValue.contentEditable = false;
+      domItemDescriptionValue.setAttribute("readonly", true);
+      domItemDueDateValue.setAttribute("readonly", true);
+      domItemPriorityValue.setAttribute("disabled", true);
+    }
+
     // change BG color based on selected priority
     // low / green
     if (selectedPriority === 1) {
@@ -140,7 +161,20 @@ function displayTodoList(todoList, defaultList) {
     itemCompleteBtn.addEventListener("click", () => {
       // update item index before deleting
       itemIndex = todoList.items.indexOf(item);
-      defaultIndex = defaultList.items.indexOf(item);
+
+      const itemToken = item.token;
+
+      const projectsString = localStorage.getItem("all projects");
+      const projects = JSON.parse(projectsString);
+      const searchToken = `${itemToken}`;
+
+      const foundItem = projects.items.findIndex(
+        (iten) => iten.token === searchToken
+      );
+
+      console.log(itemToken);
+      defaultIndex = foundItem;
+      console.log(defaultIndex);
       deleteItem(itemIndex, todoList, defaultList, defaultIndex, completedList);
       domList.removeChild(domItem);
     });
@@ -156,21 +190,24 @@ function displayTodoList(todoList, defaultList) {
     domItem.appendChild(domItemDescriptionValue);
 
     // hide remove button from home page
-    if (todoList !== defaultList && todoList !== completedList) {
+    if (
+      todoList !== defaultList &&
+      todoList !== completedList &&
+      todoList.title !== "All Projects"
+    ) {
       domItem.insertBefore(itemDeleteBtn, domItem.firstChild);
       domItem.appendChild(itemCompleteBtn);
       // put the item before the add button on project lists
       domList.insertBefore(domItem, addItemBtn);
     }
 
-    if (todoList === defaultList || todoList === completedList) {
+    if (
+      todoList === defaultList ||
+      todoList === completedList ||
+      todoList.title === "All Projects"
+    ) {
       // add the item to the defautlist
       domList.appendChild(domItem);
-
-      // show each item's original project in the default list
-      // const originalList = document.createElement("div");
-      // originalList.textContent = `Project: `;
-      // domItem.appendChild(originalList);
     }
 
     return {
@@ -186,11 +223,8 @@ function displayTodoList(todoList, defaultList) {
   // add todo item button behavior
   addItemBtn.addEventListener("click", () => {
     const newItem = createItem("-", "-", "-", "-");
+    console.log(newItem);
     assignItemToList(newItem, todoList, defaultList);
-
-    // save to localStorage
-    saveProjectInStorage(todoList.title, todoList);
-    console.log(todoList.title);
 
     const item = addNewItemToDom(newItem);
     updateListValues(
@@ -199,31 +233,32 @@ function displayTodoList(todoList, defaultList) {
       item.domItemDescriptionValue,
       item.domItemDueDateValue,
       item.domItemPriorityValue,
-      todoList
+      todoList,
+      allLists[0]
     );
+
+    saveProjectInStorage(todoList.title, todoList);
+    saveProjectInStorage(defaultList.title, defaultList);
   });
 
   return { addNewItemToDom, addItemBtn, domList };
 }
 
 // HOME
-function displayHome(defaultList) {
-  const display = displayTodoList(defaultList, defaultList);
-
-  // display each item of the list
-  defaultList.items.forEach((item) => {
-    const newItem = display.addNewItemToDom(item);
-    updateListValues(
-      item,
-      newItem.domItemTitleValue,
-      newItem.domItemDescriptionValue,
-      newItem.domItemDueDateValue,
-      newItem.domItemPriorityValue
-    );
+function displayHome() {
+  console.log(allLists);
+  const index = allLists.findIndex((list) => list.title === "All Projects");
+  const display = displayTodoList(allLists[index], defaultList);
+  if (allLists[0].items.length > 0) {
+    const allProjects = JSON.parse(localStorage.getItem("all projects"));
+    allLists[0].items = allProjects.items;
+  }
+  allLists[0].items.forEach((item) => {
+    display.addNewItemToDom(item);
   });
 }
 
-function addProjectBtnListener(defaultList) {
+function addProjectBtnListener() {
   let userInput;
   // input for the user to type the title for the new project
   const userForm = document.createElement("input");
@@ -285,7 +320,9 @@ function addProjectBtnListener(defaultList) {
             newItem.domItemTitleValue,
             newItem.domItemDescriptionValue,
             newItem.domItemDueDateValue,
-            newItem.domItemPriorityValue
+            newItem.domItemPriorityValue,
+            newList,
+            allLists[0]
           );
         });
       });
@@ -304,66 +341,73 @@ function addProjectBtnListener(defaultList) {
   });
 }
 
-function displayActiveProjectsInStorage(defaultList) {
-  for (let i = 2; i < allLists.length; i++) {
-    // add new project to the sidebar
-    const individualContainer = document.createElement("div");
-    individualContainer.className = "individualContainer";
+function displayActiveProjectsInStorage() {
+  for (let i = 1; i < allLists.length; i++) {
+    // exclude completed list and Home list from sidebar
+    if (
+      allLists[i].title !== "completed" &&
+      allLists[i].title !== "All Projects"
+    ) {
+      // add new project to the sidebar
+      const individualContainer = document.createElement("div");
+      individualContainer.className = "individualContainer";
 
-    const newProject = document.createElement("span");
-    const deleteProject = document.createElement("span");
-    const deleteIcon = document.createElement("img");
-    deleteProject.setAttribute("class", "iconContainer");
+      const newProject = document.createElement("span");
+      const deleteProject = document.createElement("span");
+      const deleteIcon = document.createElement("img");
+      deleteProject.setAttribute("class", "iconContainer");
 
-    deleteIcon.src = deleteIconImg;
-    deleteIcon.alt = "Delete project button";
+      deleteIcon.src = deleteIconImg;
+      deleteIcon.alt = "Delete project button";
 
-    // project title on sidebar
-    const { title } = allLists[i];
-    if (title.length > 0) {
-      // Convert the first character to uppercase and concatenate it with the rest of the string
-      const firstChar = title[0].toUpperCase();
-      const restOfTitle = title.slice(1);
+      // project title on sidebar
+      const { title } = allLists[i];
+      if (title.length > 0) {
+        // Convert the first character to uppercase and concatenate it with the rest of the string
+        const firstChar = title[0].toUpperCase();
+        const restOfTitle = title.slice(1);
 
-      const newTitle = firstChar + restOfTitle;
+        const newTitle = firstChar + restOfTitle;
 
-      // Assign the newTitle to newProject.textContent
-      newProject.textContent = newTitle;
-    } else {
-      // Handle the case where the title is an empty string
-      newProject.textContent = title;
-    }
+        // Assign the newTitle to newProject.textContent
+        newProject.textContent = newTitle;
+      } else {
+        // Handle the case where the title is an empty string
+        newProject.textContent = title;
+      }
 
-    projectContainer.appendChild(individualContainer);
-    individualContainer.appendChild(newProject);
-    individualContainer.appendChild(deleteProject);
-    deleteProject.appendChild(deleteIcon);
+      projectContainer.appendChild(individualContainer);
+      individualContainer.appendChild(newProject);
+      individualContainer.appendChild(deleteProject);
+      deleteProject.appendChild(deleteIcon);
 
-    deleteIcon.addEventListener("click", () => {
-      deleteList(allLists[i].title, allLists[i].title);
-    });
-
-    // // modify user input to assign manageable IDs
-    newProject.id = allLists[i].title;
-    newProject.className = "project";
-    individualContainer.id = `${allLists[i].title}Container`;
-
-    // make each project display their list when clicked
-    const projectBtn = document.getElementById(`${allLists[i].title}`);
-    projectBtn.addEventListener("click", () => {
-      const display = displayTodoList(allLists[i], defaultList);
-      allLists[i].items.forEach((item) => {
-        const newItem = display.addNewItemToDom(item);
-        updateListValues(
-          item,
-          newItem.domItemTitleValue,
-          newItem.domItemDescriptionValue,
-          newItem.domItemDueDateValue,
-          newItem.domItemPriorityValue,
-          allLists[i]
-        );
+      deleteIcon.addEventListener("click", () => {
+        deleteList(allLists[i].title, allLists[i].title);
       });
-    });
+
+      // // modify user input to assign manageable IDs
+      newProject.id = allLists[i].title;
+      newProject.className = "project";
+      individualContainer.id = `${allLists[i].title}Container`;
+
+      // make each project display their list when clicked
+      const projectBtn = document.getElementById(`${allLists[i].title}`);
+      projectBtn.addEventListener("click", () => {
+        const display = displayTodoList(allLists[i], defaultList);
+        allLists[i].items.forEach((item) => {
+          const newItem = display.addNewItemToDom(item);
+          updateListValues(
+            item,
+            newItem.domItemTitleValue,
+            newItem.domItemDescriptionValue,
+            newItem.domItemDueDateValue,
+            newItem.domItemPriorityValue,
+            allLists[i],
+            defaultList
+          );
+        });
+      });
+    }
   }
 }
 
@@ -373,4 +417,5 @@ export {
   addProjectBtnListener,
   displayHome,
   displayActiveProjectsInStorage,
+  defaultList,
 };

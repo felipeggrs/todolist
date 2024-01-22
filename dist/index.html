@@ -12,6 +12,7 @@
         <div class="header">Felipe's ToDoList</div>
       </div>
       <div id="sideContainer">
+        <button id="eraseData">Erase data</button>
         <div class="sideItem" id="homeBtn">Home</div>
         <div class="sideItem" id="completedBtn">Completed</div>
         <div class="projectContainer" id="projectContainer">
@@ -28,9 +29,8 @@ Tasks:
 *add localStorage functionality
 OK - 1. List stays after refreshing
 2. Todo stays after refreshing
-OK - make it updatable;
- - also display on All Projects and Completed;
  - make it removable from localStorage
+   - adding things to Completed seem to erase defaultList, which is causing problems displaying Home correctly. The problem is with the defaultList being reset after user refreshes page. The deleteItem function relies on defaultList being accurate throughout reloads
 *improve overall CSS:
 1. fix the add button to be centered instead of taking the whole row
 ?*add homepage items to display which list it is related to

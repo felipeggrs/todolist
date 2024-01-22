@@ -6,20 +6,14 @@ import {
   addProjectBtnListener,
   displayHome,
   displayActiveProjectsInStorage,
+  defaultList,
 } from "./display";
-import {
-  createList,
-  updateListValues,
-  getActiveProjectsInStorage,
-} from "./engine";
+import { updateListValues, getActiveProjectsInStorage } from "./engine";
 
-// default list and items to populate the page
-const defaultList = createList("All Projects");
-displayTodoList(defaultList, defaultList);
-
-console.log(localStorage);
 getActiveProjectsInStorage();
 displayActiveProjectsInStorage(defaultList);
+displayHome(defaultList);
+// displayTodoList(defaultList, defaultList);
 
 const homeBtn = document.getElementById("homeBtn");
 homeBtn.addEventListener("click", () => {
@@ -28,6 +22,7 @@ homeBtn.addEventListener("click", () => {
 
 // COMPLETED
 const completedBtn = document.getElementById("completedBtn");
+console.log(localStorage);
 completedBtn.addEventListener("click", () => {
   const display = displayTodoList(completedList, defaultList);
 
@@ -53,4 +48,11 @@ completedBtn.addEventListener("click", () => {
 const addProjectBtn = document.getElementById("addProjectBtn");
 addProjectBtn.addEventListener("click", () => {
   addProjectBtnListener(defaultList);
+});
+
+const eraseDataBtn = document.getElementById("eraseData");
+eraseDataBtn.addEventListener("click", () => {
+  localStorage.clear();
+  // eslint-disable-next-line no-restricted-globals
+  location.reload();
 });
