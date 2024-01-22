@@ -55,9 +55,10 @@ function deleteItem(
   defaultIndex,
   completedList
 ) {
-  // Remove item from defaultList and update in localStorage
-  defaultList.items.splice(defaultIndex, 1);
-  saveListToLocalStorage("all projects", defaultList);
+  // Remove item from defList (defaultList saved in Storage) and update in localStorage
+  const defList = JSON.parse(localStorage.getItem("all projects"));
+  defList.items.splice(defaultIndex, 1);
+  saveListToLocalStorage("all projects", defList);
 
   // Remove item from todoList and update in localStorage
   const [todoItem] = todoList.items.splice(todoItemIndex, 1);
