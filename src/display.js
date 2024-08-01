@@ -26,30 +26,35 @@ function getCompletedList() {
   return completed;
 }
 
+function addTemporaryHighlight(element) {
+  element.classList.add("highlight");
+
+  // Remove the highlight class after 1 second (1000 milliseconds)
+  setTimeout(() => {
+    element.classList.remove("highlight");
+  }, 1500);
+}
+
 const projectContainer = document.getElementById("projectContainer");
 
 function displayTodoList(todoList) {
-  // display list title
-  const listTitle = todoList.title;
+  // declare list and title variables
+  const domListTitle = document.createElement("div");
   const domList = document.createElement("ul");
-  domList.setAttribute("role", "list"); // css reset custom property
-
-  // modify first char to uppercase to display as list title on the page
-  if (listTitle.length > 0) {
-    const upperListTitle =
-      listTitle.charAt(0).toUpperCase() + listTitle.slice(1);
-    const domListTitle = document.createElement("div");
-    domListTitle.textContent = `${upperListTitle} List`;
-    domListTitle.id = "domListTitle";
-    domList.appendChild(domListTitle);
-    // domList.textContent = `${upperListTitle} List`;
-  }
-
   const contentContainer = document.getElementById("contentContainer");
+  const listTitle = `${
+    todoList.title.charAt(0).toUpperCase() + todoList.title.slice(1)
+  }`;
+
+  // assign attributes and append children
+  domList.setAttribute("role", "list"); // css reset custom property
+  domListTitle.textContent = `${listTitle} List`;
+  domListTitle.id = "domListTitle";
+  domList.appendChild(domListTitle);
   contentContainer.innerHTML = ""; // so it doesn't show multiple lists
   contentContainer.appendChild(domList);
 
-  // add todo item button
+  // add new item btn
   const addItemBtn = document.createElement("button");
   addItemBtn.id = "addItemBtn";
   addItemBtn.textContent = "Add New Item";
@@ -259,6 +264,16 @@ function displayHome() {
 }
 
 function addProjectBtnListener() {
+  // Check if userForm is already open
+  const existingUserForm = document.getElementById("userForm");
+
+  if (existingUserForm) {
+    existingUserForm.focus();
+    addTemporaryHighlight(existingUserForm);
+    alert("Please add one project at a time");
+    return;
+  }
+
   let userInput;
   // input for the user to type the title for the new project
   const userForm = document.createElement("input");
