@@ -187,6 +187,15 @@ function getActiveProjectsInStorage() {
   }
 }
 
+function addClickListener(elementId, callback) {
+  const element = document.getElementById(elementId);
+  if (element) {
+    element.addEventListener("click", callback);
+  } else {
+    console.error(`Element with id ${elementId} not found.`);
+  }
+}
+
 export {
   createList,
   deleteList,
@@ -196,5 +205,6 @@ export {
   updateListValues,
   saveProjectInStorage,
   getActiveProjectsInStorage,
+  addClickListener,
   allLists,
 };

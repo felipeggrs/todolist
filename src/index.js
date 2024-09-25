@@ -8,24 +8,25 @@ import {
   displayActiveProjectsInStorage,
   defaultList,
 } from "./display";
-import { updateListValues, getActiveProjectsInStorage } from "./engine";
+import {
+  updateListValues,
+  getActiveProjectsInStorage,
+  addClickListener,
+} from "./engine";
 
+// INITIALIZE
 getActiveProjectsInStorage();
 displayActiveProjectsInStorage(defaultList);
 displayHome(defaultList);
-// displayTodoList(defaultList, defaultList);
 
-const homeBtn = document.getElementById("homeBtn");
-homeBtn.addEventListener("click", () => {
+// HOME BTN
+addClickListener("homeBtn", () => {
   displayHome(defaultList);
 });
 
-// COMPLETED
-const completedBtn = document.getElementById("completedBtn");
-console.log(localStorage);
-completedBtn.addEventListener("click", () => {
+// COMPLETED BTN
+addClickListener("completedBtn", () => {
   const display = displayTodoList(completedList, defaultList);
-
   completedList.items.forEach((item) => {
     const newItem = display.addNewItemToDom(item);
     // eslint-disable-next-line no-param-reassign
@@ -44,14 +45,13 @@ completedBtn.addEventListener("click", () => {
   });
 });
 
-// ADD PROJECTS
-const addProjectBtn = document.getElementById("addProjectBtn");
-addProjectBtn.addEventListener("click", () => {
+// ADD PROJECTS BTN
+addClickListener("addProjectBtn", () => {
   addProjectBtnListener(defaultList);
 });
 
-const eraseDataBtn = document.getElementById("eraseData");
-eraseDataBtn.addEventListener("click", () => {
+// ERASE DATA BTN
+addClickListener("eraseData", () => {
   localStorage.clear();
   // eslint-disable-next-line no-restricted-globals
   location.reload();

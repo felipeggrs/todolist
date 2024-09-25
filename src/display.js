@@ -266,7 +266,6 @@ function displayHome() {
 function addProjectBtnListener() {
   // Check if userForm is already open
   const existingUserForm = document.getElementById("userForm");
-
   if (existingUserForm) {
     existingUserForm.focus();
     addTemporaryHighlight(existingUserForm);
@@ -274,8 +273,8 @@ function addProjectBtnListener() {
     return;
   }
 
-  let userInput;
   // input for the user to type the title for the new project
+  let userInput;
   const userForm = document.createElement("input");
   userForm.setAttribute("type", "text");
   userForm.id = "userForm";
@@ -291,10 +290,16 @@ function addProjectBtnListener() {
   submitButton.addEventListener("click", () => {
     userInput = userForm.value;
 
-    projectContainer.removeChild(userForm);
-    projectContainer.removeChild(submitButton);
-
     if (userInput !== "") {
+      // Check if project already exists to avoid duplicates
+      const existingProject = localStorage.getItem(userInput.toLowerCase());
+
+      if (existingProject) {
+        // eslint-disable-next-line no-alert
+        alert("Project already exists. Please choose a different name.");
+        return;
+      }
+
       // add new project to the sidebar
       const individualContainer = document.createElement("div");
       individualContainer.className = "individualContainer";
@@ -350,6 +355,8 @@ function addProjectBtnListener() {
           displayHome();
         }
       });
+      projectContainer.removeChild(userForm);
+      projectContainer.removeChild(submitButton);
       return;
     }
     alert("Please specify the new Project's name");
